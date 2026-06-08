@@ -16,6 +16,7 @@ jobs:
         with:
           project: .
           config: godot-project-doctor.toml
+          checks: assets,export,input,mobile_perf
           fail-on: none
           reports-dir: reports/godot-project-doctor
           tool-packages: >-
