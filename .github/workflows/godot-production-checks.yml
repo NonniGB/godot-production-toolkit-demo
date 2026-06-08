@@ -1,0 +1,32 @@
+name: Godot production checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: NonniGB/godot-production-toolkit/godot-ci-doctor-action@v0.1.0
+        with:
+          project: .
+          config: godot-project-doctor.toml
+          fail-on: none
+          reports-dir: reports/godot-project-doctor
+          tool-packages: >-
+            git+https://github.com/NonniGB/godot-production-toolkit.git#subdirectory=godot-project-doctor
+            git+https://github.com/NonniGB/godot-production-toolkit.git#subdirectory=godot-asset-pipeline-doctor
+            git+https://github.com/NonniGB/godot-production-toolkit.git#subdirectory=godot-export-preset-doctor
+            git+https://github.com/NonniGB/godot-production-toolkit.git#subdirectory=godot-input-map-auditor
+            git+https://github.com/NonniGB/godot-production-toolkit.git#subdirectory=godot-mobile-perf-doctor
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: godot-doctor-reports
+          path: reports/godot-project-doctor
